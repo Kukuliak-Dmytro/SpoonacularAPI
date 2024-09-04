@@ -5,7 +5,19 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-
+{
+        fetch('/.netlify/functions/apikey', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+                 })
+          // .then(response => response.json())
+          .then(data => console.log(data))
+          .catch((error) => {
+            console.error('Error:', error);
+          })
+    }
   return (
     <>
       <div>
@@ -28,6 +40,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      
     </>
   )
 }

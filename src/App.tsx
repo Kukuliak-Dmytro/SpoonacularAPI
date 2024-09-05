@@ -6,13 +6,13 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0)
 {
-        fetch('/.netlify/functions/apikey', {
+        fetch('http://localhost:5173', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           }
                  })
-          // .then(response => response.json())
+          .then(response => response.json())
           .then(data => console.log(data))
           .catch((error) => {
             console.error('Error:', error);

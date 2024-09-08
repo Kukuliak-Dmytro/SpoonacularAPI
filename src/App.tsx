@@ -4,17 +4,20 @@ import './App.css'
 
 function App() {
   useEffect(  ()=>{
-     fetch('http://localhost:5000?path=recipes/complexSearch?titleMatch=beef&number=1', {
+    const apiURL = encodeURIComponent('https://api.spoonacular.com/recipes/complexSearch?query=pasta&minProtein=10&number=3&maxFat=30&minSodium=1&offset=10');
+    
+    fetch(`http://localhost:5000?path=${apiURL}`, {
       method: 'GET',
       headers: {
+        'Content-Type': 'application/json'
       }
     })
       .then(response => response.json())
       .then(data => console.log(data))
-      .catch((error) => {
+      .catch(error => {
         console.error('Error:', error);
       });
-
+    
   },[])
     
   

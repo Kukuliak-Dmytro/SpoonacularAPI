@@ -47,7 +47,7 @@ function App() {
 
 
         {someData.map((data) => (
-          <h2 key={data.id}>{data.id}</h2> // Key prop added for each element
+          <h2 key={data.id}>{data.id}</h2> 
         ))}
         
       

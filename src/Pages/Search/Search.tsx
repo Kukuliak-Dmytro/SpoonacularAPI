@@ -1,51 +1,51 @@
 import { useState, useRef, useEffect } from 'react'
 import './Search.css'
 import Recipes from '../../Cards/Recipes';
+import { useSearchParams } from 'react-router-dom';
 
 function Search() {
-  interface dataProps{
-    results:Array<{
-      id:number;
-      image:string;
-      imageType:string;
-      title:string
+  interface dataProps {
+    results: Array<{
+      id: number;
+      image: string;
+      imageType: string;
+      title: string;
     }>;
-    offset:number;
-    number:number
-    totalResults:number;
+    offset: number;
+    number: number;
+    totalResults: number;
   }
-  // Declare state variables inside the component
-  const searchQuery = useRef<HTMLInputElement>(null);
-  const [pageNumber] = useState(0);
+
+  // Declare state variables
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get("query") || "";  // Get query from URL
+  const [pageNumber] = useState(2);
   const numberOfResults = 5;
-  const [someData, setSomeData] = useState<dataProps>({results:[],offset:0,number:0,totalResults:0}); 
-  const [loading, setLoading]=useState(true);
-  useEffect(()=>{fetchData();},[])
+  const [someData, setSomeData] = useState<dataProps>({ results: [], offset: 0, number: 0, totalResults: 0 });
+  const [loading, setLoading] = useState(true);
 
-  
-  function fetchData() {
-    const query = searchQuery.current?.value;
-    console.log(query);
-    // const apiURL = encodeURIComponent(`https://api.spoonacular.com/recipes/complexSearch?query=pasta&minProtein=10&number=3&maxFat=30&minSodium=1&offset=10`);
-    const apiURL = encodeURIComponent(`https://api.spoonacular.com/recipes/complexSearch?query=${query}&number=${numberOfResults}&offset=${pageNumber * numberOfResults}`);
+  // Fetch data based on search query
+  useEffect(() => {
+    fetchData();
+  }, [searchParams]);  // Re-fetch data when the search params change
 
+  async function fetchData() {
+    const apiURL = encodeURIComponent(`https://api.spoonacular.com/recipes/complexSearch?query=${searchQuery}&number=${numberOfResults}&offset=${pageNumber * numberOfResults}`);
 
-   fetch(`http://localhost:5000?path=${apiURL}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setSomeData(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error:', error);
+    try {
+      const response = await fetch(`http://localhost:5000?path=${apiURL}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
+      const data = await response.json();
+      console.log(data);
+      setSomeData(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
 
   return (
@@ -55,23 +55,19 @@ function Search() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            fetchData();
-          }}>
-
-          <input type="text" placeholder='Search' ref={searchQuery} />
+            const query = (e.target as HTMLFormElement).querySelector('input')?.value;
+            if (query) {
+              setSearchParams({ query }); 
+            }
+          }}
+        >
+          <input type="text" placeholder="Search" defaultValue={searchQuery} />
           <input type="submit" value="Search API" />
         </form>
         <Recipes loading={loading} recipes={someData!.results}></Recipes>
-        {/* <div className="paginateContainer">
-          {Array.from({ length: Math.ceil(someData!.totalResults / numberOfResults) }).map((_, i) => (
-            <button key={i}>{i + 1}</button>  // Button for each page, starting from 1
-          ))}
-        </div> */}
-
-
       </div>
     </>
-  )
+  );
 }
 
 export default Search;

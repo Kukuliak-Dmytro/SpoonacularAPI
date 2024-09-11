@@ -22,7 +22,7 @@ const Recipes: React.FC<RecipesProps> = ({ recipes, loading }) => {
                 <span>
                     <h3>{data.title}</h3>
                     <p>ID:{data.id}</p>
-                    <Link to={`/${data.id}`}>Get detailed recipe instructions</Link>
+                    <Link to={`/recipes/${data.id}`}>Get detailed recipe instructions</Link>
                     <a>Save Recipe</a>
                 </span>
             </li>

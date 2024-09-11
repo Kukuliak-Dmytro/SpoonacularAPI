@@ -16,7 +16,7 @@ function App() {
   }
   // Declare state variables inside the component
   const searchQuery = useRef<HTMLInputElement>(null);
-  const [pageNumber, setPageNumber] = useState(0);
+  const [pageNumber] = useState(0);
   const numberOfResults = 5;
   const [someData, setSomeData] = useState<dataProps>({results:[],offset:0,number:0,totalResults:0}); 
   const [loading, setLoading]=useState(true);

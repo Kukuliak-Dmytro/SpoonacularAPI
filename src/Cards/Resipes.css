@@ -1,0 +1,14 @@
+
+.recipe{
+    display: flex;
+    margin: 20px 0px;
+    text-align: center;
+    img{
+        border-radius: 8px;
+        width: 60%;
+        height: 60%;
+    }
+    span{
+        width: 80%;
+    }
+}

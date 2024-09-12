@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 
 interface RecipeProps {
-    
+  
 }
  
 const Recipe: React.FC<RecipeProps> = () => {

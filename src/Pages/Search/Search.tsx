@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import './Search.css'
 import Recipes from '../../Cards/Recipes';
 import { useSearchParams } from 'react-router-dom';
+import PaginateBar from '../../Pagination/Pagination';
 
 function Search() {
   interface dataProps {
@@ -18,8 +19,9 @@ function Search() {
 
   // Declare state variables
   const [searchParams, setSearchParams] = useSearchParams();
-  const searchQuery = searchParams.get("query") || "";  // Get query from URL
-  const [pageNumber] = useState(2);
+  const searchQuery = searchParams.get("query") || ""; 
+  // the API allows only 900 pages, no more 
+  const [pageNumber,setPageNumber] = useState(0);
   const numberOfResults = 5;
   const [someData, setSomeData] = useState<dataProps>({ results: [], offset: 0, number: 0, totalResults: 0 });
   const [loading, setLoading] = useState(true);
@@ -27,10 +29,10 @@ function Search() {
   // Fetch data based on search query
   useEffect(() => {
     fetchData();
-  }, [searchParams]);  // Re-fetch data when the search params change
+  }, [searchParams, pageNumber]);  // Re-fetch data when the search params change
 
   async function fetchData() {
-    const apiURL = encodeURIComponent(`https://api.spoonacular.com/recipes/complexSearch?query=${searchQuery}&number=${numberOfResults}&offset=${pageNumber * numberOfResults}`);
+    const apiURL = encodeURIComponent(`https://api.spoonacular.com/recipes/complexSearch?query=${searchQuery}&number=${numberOfResults}&offset=${pageNumber}`);
 
     try {
       const response = await fetch(`http://localhost:5000?path=${apiURL}`, {
@@ -47,7 +49,7 @@ function Search() {
       console.error('Error:', error);
     }
   }
-
+  function setPagination(number:number){setPageNumber(number)}
   return (
     <>
       <div className="container">
@@ -65,6 +67,7 @@ function Search() {
           <input type="submit" value="Search API" />
         </form>
         <Recipes loading={loading} recipes={someData!.results}></Recipes>
+        <PaginateBar number={someData.number} offset={someData.offset} totalResults={someData.totalResults} setPagination={setPagination}></PaginateBar>
       </div>
     </>
   );

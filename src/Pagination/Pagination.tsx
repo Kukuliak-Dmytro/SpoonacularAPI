@@ -1,20 +1,22 @@
+import  './Pagination.css'
 interface PaginateBarProps {
-    offset:number;
+    currentPageNumber:number;
     number:number;
     totalResults:number;
-    setPagination: (pageNumber: number) => void
+    setPagination: (currentPageNumber: number) => void
 }
  
-const PaginateBar: React.FC<PaginateBarProps> = ({offset,number,totalResults, setPagination}) => {
-    const pageNumbers=[];
+const PaginateBar: React.FC<PaginateBarProps> = ({currentPageNumber,number,totalResults, setPagination}) => {
+    const PageNumbers=[];
     
-    for(let i=1;i<Math.min(901, totalResults/number);i++){
-        pageNumbers.push(i);
+    for(let i=0;i<=Math.min(totalResults/number, 180);i++){
+        PageNumbers.push(i);
     }
+
     return ( 
         <div className="paginateContainer">
-           { pageNumbers.map((number)=>(
-            <button key={number} onClick={()=>setPagination(number)}>{number}</button>
+           { PageNumbers.map((pageNumber)=>(
+            <button key={pageNumber}className={`${pageNumber===(currentPageNumber)? 'activePage':''}`} onClick={()=>setPagination(pageNumber)}>{pageNumber+1}</button>
            ))}
         </div>
     );
